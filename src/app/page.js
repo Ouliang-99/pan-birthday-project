@@ -1,101 +1,207 @@
+"use client";
+import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.js
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+  const [isDrawingComplete, setIsDrawingComplete] = useState(false);
+  const [backgroundColor, setBackgroundColor] = useState("bg-black");
+  const [isTextVisible, setIsTextVisible] = useState(false);
+  const [isVectorAnimationComplete, setIsVectorAnimationComplete] =
+    useState(false);
+  const [fireworkPositions, setFireworkPositions] = useState([]);
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+  // Generate positions only on the client-side
+  useEffect(() => {
+    setFireworkPositions(
+      Array.from({ length: 20 }, () => ({
+        left: `${Math.random() * 100}vw`,
+        delay: Math.random() * 2,
+      }))
+    );
+  }, []);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setIsDrawingComplete(true);
+      setIsTextVisible(true);
+      setBackgroundColor("bg-gradient-to-b from-pink-300 to-blue-500");
+    }, 5000);
+
+    setTimeout(() => {
+      setIsVectorAnimationComplete(true);
+    }, 8000); // แสดงผลหลัง vector animation จบ
+  }, []);
+
+  return (
+    <div
+      className={`${backgroundColor} min-h-screen text-white p-4 relative overflow-hidden`}
+    >
+      <div className="flex flex-col items-center justify-center space-y-4 relative">
+        {isTextVisible && (
+          <motion.h2
+            className="text-xl font-bold mt-10 relative z-10"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: isDrawingComplete ? 1 : 0 }}
+            transition={{ duration: 2 }}
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+            🎉 สุขสันต์วันเกิดต้าวแพนน้อย 🎉
+          </motion.h2>
+        )}
+      </div>
+
+      <motion.svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 100 100"
+        className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+        initial={{ opacity: 1 }}
+        animate={{ opacity: isDrawingComplete ? 0 : 1 }}
+        transition={{ duration: 5 }}
+      >
+        <motion.path
+          d="M 50 30 Q 65 10, 80 30 Q 90 50, 50 70 Q 10 50, 20 30 Q 35 10, 50 30 Z"
+          fill="transparent"
+          stroke="white"
+          strokeWidth="2"
+          initial={{ strokeDasharray: 0, strokeDashoffset: 100 }}
+          animate={{ strokeDasharray: 100, strokeDashoffset: 0 }}
+          transition={{ duration: 5, ease: "easeInOut" }}
+        />
+      </motion.svg>
+
+      {isDrawingComplete && (
+        <>
+          {["🎆", "❤️", "✨"].map((emoji, i) => (
+            <motion.div
+              key={`effect-${i}`}
+              className="absolute text-yellow-400 text-4xl"
+              initial={{
+                opacity: 0,
+                scale: 0.5,
+                x: `${Math.random() * 100}vw`,
+                y: `${Math.random() * 100}vh`,
+              }}
+              animate={{
+                opacity: [0, 1, 0],
+                scale: [0.5, 1.5, 0.5],
+                x: `${Math.random() * 100}vw`,
+                y: `${Math.random() * 100}vh`,
+              }}
+              transition={{ duration: 2, repeat: Infinity, delay: i * 0.3 }}
+            >
+              {emoji}
+            </motion.div>
+          ))}
+          <motion.div
+            className="transform -translate-x-1/2 -translate-y-1/2 text-lg text-center mt-[75vh]"
+            initial={{ y: 0 }}
+            animate={{ y: [-10, 10, -10] }}
+            transition={{
+              duration: 3,
+              repeat: Infinity,
+              repeatType: "loop",
+            }}
           >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
+            เลื่อนลงๆๆๆ ❤️
+          </motion.div>
+          <div
+            id="messageSection"
+            className="flex flex-col items-center space-y-4 mt-[40vh]"
+          >
+            <motion.div
+              initial={{ opacity: 0, y: 50 }}
+              animate={
+                isDrawingComplete ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }
+              }
+              transition={{ duration: 1 }}
+              className="text-xl max-w-[220px] font-semibold text-center"
+            >
+              ขอให้ปีนี้รำรวยเงินทอง มีความสุขมากๆนะ อยู่กับเค้าไปนานๆนะ
+              <div className="flex justify-center items-center mt-8">
+                <motion.div
+                  className="relative"
+                  initial={{ scale: 0.9, rotate: 0 }}
+                  animate={{
+                    scale: [0.9, 1.1, 0.9],
+                    rotate: [0, 3, -3, 0],
+                    y: [0, -5, 0],
+                  }}
+                  transition={{
+                    duration: 3,
+                    repeat: Infinity,
+                    repeatType: "loop",
+                  }}
+                >
+                  <Image
+                    src="/pan.jpg"
+                    alt="Pan"
+                    width={200}
+                    height={100}
+                    className="rounded-lg shadow-lg"
+                  />
+                  <motion.div
+                    className="absolute inset-0 rounded-lg border-4 border-pink-400 opacity-50"
+                    initial={{ scale: 1, opacity: 0.7 }}
+                    animate={{
+                      scale: [1, 1.2, 1],
+                      opacity: [0.7, 0.3, 0.7],
+                    }}
+                    transition={{
+                      duration: 3,
+                      repeat: Infinity,
+                      repeatType: "loop",
+                    }}
+                  ></motion.div>
+                </motion.div>
+              </div>
+            </motion.div>
+          </div>
+        </>
+      )}
+
+      {/* เพิ่มข้อความหลัง vector animation */}
+
+      <div className="mt-[20vh] "></div>
+      {isVectorAnimationComplete && (
+        <motion.div
+          className="absolute bottom-10 text-lg text-center text-white left-1/2 transform -translate-x-1/2 w-[250px] "
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 2 }}
         >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+          ปีนี้เค้าไม่มีของขวัญให้นอกจากเว็บนี้กับเค้ก
+          ปีหน้าเค้าจะหาที่ดีกว่านี้ให้นะ รักจุ๊บ ❤️
+        </motion.div>
+      )}
+
+      {/* พลุ */}
+      {isVectorAnimationComplete &&
+        fireworkPositions.map((pos, i) => (
+          <motion.div
+            key={i}
+            className="absolute bottom-0"
+            style={{
+              left: pos.left,
+            }}
+            initial={{
+              y: 0,
+              scale: 0.5,
+              opacity: 0.5,
+            }}
+            animate={{
+              y: [-10, -200, -400],
+              scale: [0.5, 1.2, 0],
+              opacity: [0.8, 0.8, 0],
+            }}
+            transition={{
+              duration: 3,
+              repeat: Infinity,
+              delay: pos.delay,
+            }}
+          >
+            <div className="w-2 h-2 bg-yellow-400 rounded-full"></div>
+          </motion.div>
+        ))}
     </div>
   );
 }
