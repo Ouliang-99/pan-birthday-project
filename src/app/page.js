@@ -11,7 +11,6 @@ export default function Home() {
     useState(false);
   const [fireworkPositions, setFireworkPositions] = useState([]);
 
-  // Generate positions only on the client-side
   useEffect(() => {
     setFireworkPositions(
       Array.from({ length: 20 }, () => ({
@@ -30,7 +29,7 @@ export default function Home() {
 
     setTimeout(() => {
       setIsVectorAnimationComplete(true);
-    }, 8000); // แสดงผลหลัง vector animation จบ
+    }, 8000);
   }, []);
 
   return (
@@ -158,9 +157,6 @@ export default function Home() {
           </div>
         </>
       )}
-
-      {/* เพิ่มข้อความหลัง vector animation */}
-
       <div className="mt-[20vh] "></div>
       {isVectorAnimationComplete && (
         <motion.div
@@ -174,7 +170,6 @@ export default function Home() {
         </motion.div>
       )}
 
-      {/* พลุ */}
       {isVectorAnimationComplete &&
         fireworkPositions.map((pos, i) => (
           <motion.div
